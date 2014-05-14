@@ -12,31 +12,48 @@ function mxt-rev()
 {
 	echo "mxt-app: silicon revision"
 	
-	IFS=' ' t6_array=( $(mxt-app -d i2c-dev:${bus}-${address} -R -T6) )
+	IFS=' '
+	t6_array=( $(mxt-app -d i2c-dev:${bus}-${address} -R -T6) )
 
-	for ((i=0; i<=6; i++)) 
+	for ((i=0; i<=6; i++))
 	do
 	  byte[$i]=${t6_array[$i]}
 	done
-	
-	# print T6 byte array
-	for ((i=0; i<=6; i++))
-	do
-	  echo 0x${byte[$i]}
-	done
 
-	# T6 object config byte 5 = 128 (0x80) for reading revision from T37 
+	# print T6 byte array
+	#for ((i=0; i<=6; i++))
+	#do
+	#  echo 0x${byte[$i]}
+	#done
+
+	# T6 object config byte 5 = 128 (0x80) for reading revision from T37
 	byte[5]="80"
 
-	# T6 object config byte 4 for testing
-	byte[4]="33"
-
-	# T6 object re-config 
+	# T6 object re-config
 	mxt-app -d i2c-dev:${bus}-${address} -W -T6 ${byte[0]}${byte[1]}${byte[2]}${byte[3]}${byte[4]}${byte[5]}${byte[6]}
 
-	# T37
-	IFS=' ' t37_array=( $(mxt-app -d i2c-dev:${bus}-${address} -R -T37) )
-	echo "T37[19]" = 0x${t37_array[19]}
+	IFS=' '
+	t37_array=( $(mxt-app -d i2c-dev:${bus}-${address} -R -T37) )
+
+  # T37 dump first two bytes are length and page
+	# Therefore fist byte zero start from byte 2
+	# For instant byte 19 = 19 + 2 = 21
+	hexval=${t37_array[21]}
+	decval=$( echo $((16#${hexval})) )
+	# echo "Decimal T37[19] " = $decval
+
+	rev=$( echo $((decval >> 4)) )
+	# echo $rev
+
+	if [  $rev = "2" ]
+	then
+		echo "Rev C"
+	elif [ $rev = "3" ]
+	then
+		echo "Rev D"
+	else
+		echo "Rev not found"
+	fi
 }
 
 if [ -d $MXTSYSFS ];
