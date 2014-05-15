@@ -35,7 +35,7 @@ function mxt-rev()
 	IFS=' '
 	t37_array=( $(mxt-app -d i2c-dev:${bus}-${address} -R -T37) )
 
-  # T37 dump first two bytes are length and page
+	# T37 dump first two bytes are length and page
 	# Therefore fist byte zero start from byte 2
 	# For instant byte 19 = 19 + 2 = 21
 	hexval=${t37_array[21]}
@@ -56,30 +56,29 @@ function mxt-rev()
 	fi
 }
 
-if [ -d $MXTSYSFS ];
-then
+if [ -d $MXTSYSFS ] ; then
 	echo "mxt-app: sysfs create"
-else
-	echo "mxt-app: sysfs doesn't exist"
-fi
 
-if [ -e $MXTSYSFS/enable ];
-then
-	echo "mxt-app: sysfs was enabled"
-else
-	echo "mxt-app: sysfs was disabled"
+	if [ -e $MXTSYSFS/enable ] ; then
+	    echo "mxt-app: sysfs was enabled"
+	else
+	    echo "mxt-app: sysfs was disabled"
+	fi
 
-	IFS='-' array=( $(ls $MXTSYSFS | grep $ADDRESS) )
+	IFS='-'
+	array=( $(ls $MXTSYSFS | grep $ADDRESS) )
 	bus=${array[0]}
 	address=${array[1]}
 	
 	#echo "mxt-app i2c ${bus}-${address}"
 
-	if [ -e "/dev/i2c-${bus}" ];
-	then
-		echo "mxt-app: use i2c-${bus} as an interface"
-		sudo chown chronos /dev/i2c-${bus}
+	if [ -e "/dev/i2c-${bus}" ] ; then
+	    echo "mxt-app: use i2c-${bus} as an interface"
+	    sudo chown chronos /dev/i2c-${bus}
 	else
-		echo "mxt-app: cannot find i2c-${bus}"
+	    echo "mxt-app: cannot find i2c-${bus}"
 	fi
+else
+	echo "mxt-app: sysfs doesn't exist"
+	exit 1
 fi
