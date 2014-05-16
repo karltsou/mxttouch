@@ -77,6 +77,14 @@ if [ -d $MXTSYSFS ] ; then
 	    sudo chown chronos /dev/i2c-${bus}
 	else
 	    echo "mxt-app: cannot find i2c-${bus}"
+	    exit 1
+	fi
+
+	if [ -e "/usr/local/bin/mxt-app" ] ; then
+	  sudo chown chronos /usr/local/bin/mxt-app
+	  sudo chgrp chronos /usr/local/bin/mxt-app
+	else
+	  exit 1
 	fi
 else
 	echo "mxt-app: sysfs doesn't exist"
