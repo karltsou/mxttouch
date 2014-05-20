@@ -7,6 +7,17 @@
 
 MXTSYSFS="/sys/bus/i2c/drivers/atmel_mxt_ts"
 ADDRESS="004a"
+LOCAL_BIN="/usr/local/bin"
+
+function mxt-install()
+{
+	echo "mxt-app: install mxt-app"
+	if [ ! -d $LOCAL_BIN ] ; then
+	  sudo mkdir -p $LOCAL_BIN
+	fi
+
+	sudo cp mxt-app $LOCAL_BIN
+}
 
 function mxt-rev()
 {
@@ -80,13 +91,12 @@ if [ -d $MXTSYSFS ] ; then
 	    exit 1
 	fi
 
-	if [ -e "/usr/local/bin/mxt-app" ] ; then
-	  sudo chown chronos /usr/local/bin/mxt-app
-	  sudo chgrp chronos /usr/local/bin/mxt-app
-	else
-	  exit 1
+	if [ ! -e $LOCAL_BIN/mxt-app ] ; then
+	  mxt-install
+	  sudo chmod 777     $LOCAL_BIN/mxt-app
+	  sudo chown chronos $LOCAL_BIN/mxt-app
+	  sudo chgrp chronos $LOCAL_BIN/mxt-app
 	fi
 else
 	echo "mxt-app: sysfs doesn't exist"
-	exit 1
 fi
