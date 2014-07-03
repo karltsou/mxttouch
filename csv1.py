@@ -27,8 +27,9 @@ for row in reader:
 			column += 1
 
 # print the refs that to be used
-print "Refs - Max %d" % max(refs)
-print "Refs - Avg %f" % float(sum(refs) / len(refs))
-print "REfs - Min %d" % min(refs)
+print "Refs = Max %d" % max(refs)
+print "Refs = Avg %f" % float(sum(refs) / len(refs))
+print "Refs = Min %d" % min(refs)
+print "Refs = Max - Min %d" % (max(refs) - min(refs))
 
 ifile.close()
