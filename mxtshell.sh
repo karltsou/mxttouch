@@ -8,6 +8,7 @@
 MXTSYSFS="/sys/bus/i2c/drivers/atmel_mxt_ts"
 ADDRESS="004a"
 LOCAL_BIN="/usr/local/bin"
+APPNAME=mxt-app
 
 function mxt-install()
 {
@@ -16,7 +17,10 @@ if [ ! -d $LOCAL_BIN ] ; then
   sudo mkdir -p $LOCAL_BIN
 fi
 
-sudo cp mxt-app $LOCAL_BIN
+sudo cp "${APPNAME}" "${LOCAL_BIN}"
+sudo chmod 777     "${LOCAL_BIN}/${APPNAME}"
+sudo chown chronos "${LOCAL_BIN}/${APPNAME}"
+sudo chgrp chronos "${LOCAL_BIN}/${APPNAME}"
 }
 
 function mxt-rev()
@@ -91,15 +95,12 @@ if [ -d $MXTSYSFS ] ; then
     echo "mxt-app: cannot find i2c-${bus}"
   fi
 
-  if [ ! -e $LOCAL_BIN/mxt-app ] ; then
+  if [ ! -e "${LOCAL_BIN}/${APPNAME}" ] ; then
     mxt-install
-    sudo chmod 777     $LOCAL_BIN/mxt-app
-    sudo chown chronos $LOCAL_BIN/mxt-app
-    sudo chgrp chronos $LOCAL_BIN/mxt-app
   fi
 else
   echo "mxt-app: sysfs doesn't exist"
 fi
 }
 
-mxt-app
+mxt-main
