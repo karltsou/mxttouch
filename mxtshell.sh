@@ -9,6 +9,7 @@ MXTSYSFS="/sys/bus/i2c/drivers/atmel_mxt_ts"
 ADDRESS="004a"
 LOCAL_BIN="/usr/local/bin"
 APPNAME=mxt-app
+NOW=$(date +"%T-%m-%d-%Y")
 
 function mxt-install()
 {
@@ -67,6 +68,12 @@ elif [ $rev = "3" ] ; then
 else
   echo "Rev not found"
 fi
+}
+
+# refs level dump to file
+function mxt-refs()
+{
+mxt-app -d i2c-dev:${bus}-${address} --references --debug-dump "refs-level-${NOW}.log"
 }
 
 # main routine
