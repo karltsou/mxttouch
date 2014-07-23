@@ -50,9 +50,9 @@ result_code=${t5_array[1]}
 result_seqnum=${t5_array[2]}
 # echo "pin fault result - 0x${result}"
 
-if [ $result_code = "FE" ] ; then
+if [ "$result_code" == "FE" ] ; then
 	echo "pin fault - pass"
-elif [ $result_code = "12" ] ; then
+elif [ "$result_code" == "12" ] ; then
 	echo "pin fault - fail"
 else
 	echo "pin fault - unknow"
@@ -98,9 +98,9 @@ decval=$( echo $((16#${hexval})) )
 rev=$( echo $((decval >> 4)) )
 # echo $rev
 
-if [ $rev = "2" ] ; then
+if [ "$rev" == "2" ] ; then
 	echo "Rev C"
-elif [ $rev = "3" ] ; then
+elif [ "$rev" == "3" ] ; then
 	echo "Rev D"
 else
 	echo "Rev not found"
