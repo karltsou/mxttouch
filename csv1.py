@@ -31,5 +31,6 @@ print "Refs = Max %d" % max(refs)
 print "Refs = Avg %f" % float(sum(refs) / len(refs))
 print "Refs = Min %d" % min(refs)
 print "Refs = Max - Min %d" % (max(refs) - min(refs))
+print "Refs = (Max + Min) / 2 %f" % float((max(refs) + min(refs)) / 2)
 
 ifile.close()
